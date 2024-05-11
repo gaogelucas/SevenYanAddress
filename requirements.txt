@@ -1,4 +1,4 @@
 # requirements.txt
 
 flask
-gunicorn==19.7.1
+gunicorn

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>七言地址转换器</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='dist/css/output.css') }}">
+</head>
+
+<body class="bg-gray-100 font-sans leading-normal tracking-normal">
+    <div class="container mx-auto mt-10">
+        <div class="bg-white p-8 rounded-lg shadow-lg max-w-lg mx-auto">
+            <h1 class="text-3xl font-bold text-center mb-4">七言地址转换器</h1>
+            <h2 class="text-xl text-center mb-6">将一个经纬度坐标转换为七言地址</h2>
+            
+            <form action="/convert_to_hanzi" method="post" class="mb-4">
+                <div class="mb-4">
+                    <label for="latitude" class="block text-gray-700 text-sm font-bold mb-2">纬度：-90.0~90.0</label>
+                    <input type="text" id="latitude" name="latitude" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                
+                <div class="mb-6">
+                    <label for="longitude" class="block text-gray-700 text-sm font-bold mb-2">经度-180.0~180.0</label>
+                    <input type="text" id="longitude" name="longitude" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                
+                <div class="flex justify-center gap-4">
+                    <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+                        提交
+                    </button>
+                    <button type="button" onclick="getLocation()" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-6 rounded focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50">
+                        使用当前位置
+                    </button>
+                </div>
+            </form>
+
+            {% if hanzi_address %}
+            <div class="text-lg text-center mt-4 p-4 border border-blue-200 rounded-lg shadow">
+                <span class="font-semibold">这个坐标的七言地址是:</span> <span class="text-blue-600">{{ hanzi_address }}</span>
+            </div>
+            {% endif %}
+
+            <h2 class="text-xl text-center mb-6 mt-12">将一个七言地址转换为经纬度坐标</h2>
+            <form action="/convert_to_coordinates" method="post">
+                <div class="mb-4">
+                    <label for="hanzi_string" class="block text-gray-700 text-sm font-bold mb-2">七言地址：</label>
+                    <input type="text" id="hanzi_string" name="hanzi_string" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                
+                <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+                    转换为经纬度坐标
+                </button>
+            </form>
+
+            {% if latitude and longitude %}
+            <div class="text-lg text-center mt-4 p-4 border border-green-200 rounded-lg shadow">
+                <span class="font-semibold">这个七言地址对应的经纬度坐标是:</span> 纬度 <span class="text-green-600">{{ latitude }}</span>, 经度 <span class="text-green-600">{{ longitude }}</span>
+            </div>
+            {% endif %}
+
+            {% if error %}
+            <p class="text-red-500 text-xs italic mt-4">{{ error }}</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition, showError);
+            } else {
+                alert("Geolocation is not supported by this browser.");
+            }
+        }
+
+        function showPosition(position) {
+            document.getElementById('latitude').value = position.coords.latitude;
+            document.getElementById('longitude').value = position.coords.longitude;
+        }
+
+        function showError(error) {
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    alert("User denied the request for Geolocation.");
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    alert("Location information is unavailable.");
+                    break;
+                case error.TIMEOUT:
+                    alert("The request to get user location timed out.");
+                    break;
+                case error.UNKNOWN_ERROR:
+                    alert("An unknown error occurred.");
+                    break;
+            }
+        }
+    </script>
+</body>
+
+</html>

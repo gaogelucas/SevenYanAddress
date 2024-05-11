@@ -9,20 +9,21 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='dist/css/output.css') }}">
 </head>
 
-<body class="bg-gray-100 font-sans leading-normal tracking-normal">
+<body class="bg-gray-800 text-gray-300 font-sans leading-normal tracking-normal">
     <div class="container mx-auto mt-10">
-        <div class="bg-white p-8 rounded-lg shadow-lg max-w-lg mx-auto">
-            <h1 class="text-3xl font-bold text-center mb-4">七言地址转换器</h1>
-            <h2 class="text-xl text-center mb-6">将一个经纬度坐标转换为七言地址</h2>
+        <div class="bg-gray-900 p-8 rounded-lg shadow-lg max-w-lg mx-auto">
+            <h1 class="text-3xl font-bold text-center mb-4 text-white">七言地址转换器</h1>
+            <h2 class="text-xl text-center mb-6 text-gray-300">将一个经纬度坐标转换为七言地址</h2>
             
+            <!-- Coordinate to Hanzi Form -->
             <form action="/convert_to_hanzi" method="post" class="mb-4">
                 <div class="mb-4">
-                    <label for="latitude" class="block text-gray-700 text-sm font-bold mb-2">纬度：-90.0~90.0</label>
+                    <label for="latitude" class="block text-gray-300 text-sm font-bold mb-2">纬度：-90.0~90.0</label>
                     <input type="text" id="latitude" name="latitude" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
                 
                 <div class="mb-6">
-                    <label for="longitude" class="block text-gray-700 text-sm font-bold mb-2">经度-180.0~180.0</label>
+                    <label for="longitude" class="block text-gray-300 text-sm font-bold mb-2">经度-180.0~180.0</label>
                     <input type="text" id="longitude" name="longitude" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
                 
@@ -36,16 +37,18 @@
                 </div>
             </form>
 
+            <!-- Results for Coordinate to Hanzi -->
             {% if hanzi_address %}
-            <div class="text-lg text-center mt-4 p-4 border border-blue-200 rounded-lg shadow">
-                <span class="font-semibold">这个坐标的七言地址是:</span> <span class="text-blue-600">{{ hanzi_address }}</span>
+            <div class="text-lg text-center mt-4 p-4 border border-blue-200 rounded-lg shadow bg-gray-800 text-white">
+                <span class="font-semibold">这个坐标的七言地址是:</span> <span class="text-blue-400">{{ hanzi_address }}</span>
             </div>
             {% endif %}
 
-            <h2 class="text-xl text-center mb-6 mt-12">将一个七言地址转换为经纬度坐标</h2>
+            <h2 class="text-xl text-center mb-6 mt-12 text-gray-300">将一个七言地址转换为经纬度坐标</h2>
+            <!-- Hanzi to Coordinate Form -->
             <form action="/convert_to_coordinates" method="post">
                 <div class="mb-4">
-                    <label for="hanzi_string" class="block text-gray-700 text-sm font-bold mb-2">七言地址：</label>
+                    <label for="hanzi_string" class="block text-gray-300 text-sm font-bold mb-2">七言地址：</label>
                     <input type="text" id="hanzi_string" name="hanzi_string" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
                 
@@ -54,15 +57,26 @@
                 </button>
             </form>
 
+            <!-- Results for Hanzi to Coordinate -->
             {% if latitude and longitude %}
-            <div class="text-lg text-center mt-4 p-4 border border-green-200 rounded-lg shadow">
-                <span class="font-semibold">这个七言地址对应的经纬度坐标是:</span> 纬度 <span class="text-green-600">{{ latitude }}</span>, 经度 <span class="text-green-600">{{ longitude }}</span>
+            <div class="text-lg text-center mt-4 p-4 border border-green-200 rounded-lg shadow bg-gray-800 text-white">
+                <span class="font-semibold">这个七言地址对应的经纬度坐标是:</span> 纬度 <span class="text-green-400">{{ latitude }}</span>, 经度 <span class="text-green-400">{{ longitude }}</span>
             </div>
             {% endif %}
 
             {% if error %}
             <p class="text-red-500 text-xs italic mt-4">{{ error }}</p>
             {% endif %}
+        </div>
+
+        <!-- API Introduction -->
+        <div class="bg-gray-700 mt-10 p-8 rounded-lg shadow-lg max-w-lg mx-auto">
+            <h2 class="text-2xl font-bold text-center text-white mb-4">API 使用说明</h2>
+            <p class="text-gray-300 mb-4">本应用同时提供了 RESTful API，允许程序化方式交互:</p>
+            <ul class="list-disc pl-5">
+                <li><strong>经纬度转七言地址:</strong> POST /api/hanzi/</li>
+                <li><strong>七言地址转经纬度:</strong> POST /api/coordinates/</li>
+            </ul>
         </div>
     </div>
 
